@@ -1,29 +1,24 @@
 body {
-  font: 14px "Century Gothic", Futura, sans-serif;
+  font: 14px sans-serif;
   margin: 20px;
-}
-
-#title-div {
-  display: block;
-}
-
-#upload-wrapper {
-  margin: 0 auto;
-  width: 50%;
-}
-
-.upload-form {
-  display: block;
-  margin: 0 auto;
-  padding: 10px;
-}
-
-.instructions {
-  text-align: center;
-  font-weight: normal;
 }
 
 h1 {
   text-align: center;
-  padding: 2em;
+  padding: 1em;
+}
+
+.home-wrapper {
+  background: #DDD;
+
+  border-style: solid;
+  border-width: thin;
+  border-radius: 3px;
+
+  margin: auto;
+  width: 80%;
+  max-width: 600px;
+  margin-top: 10%;
+
+  padding: 5%;
 }

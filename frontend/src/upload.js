@@ -1,5 +1,9 @@
 import React from 'react';
+import { FormGroup, Text } from "@blueprintjs/core";
 import axios from 'axios';
+import './blueprint.css'
+import './upload.css'
+import { Button, FileInput } from "@blueprintjs/core";
 
 function uploadSuccess({ data }) {
   return {
@@ -15,37 +19,63 @@ function uploadFail(error) {
   };
 }
 
-export class UploadText extends React.Component {
-  render() {
-    return (
-      <h3 className="instructions">
-        Please submit a csv file with the data to use for training,
-        validation and testing.
-        </h3>
-      )
-  }
-}
-
 export class UploadForm extends React.Component {
-  uploadHandler(event) {
-    console.log(event.target.files[0]);
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      "file" : "Choose file...",
+      "fileInputSelected" : false
+    };
+  }
+
+  submitUploadFormHandler = (event) => {
+
+    if (!this.state.fileInputSelected) {
+      return;
+    }
+
+    const file = this.state.file;
 
     let data = new FormData();
-    data.append('file', event.target.files[0]);
+    data.append('file', file);
     data.append('name', 'csv');
     data.append('headers', {"Access-Control-Allow-Origin": "http://localhost:5000"})
-    axios.post('http://localhost:5000', data)
-      .then(response => console.log(uploadSuccess(response)))
+    axios.post('http://localhost:5000/create', data)
+      .then(response => {
+        const model_id = response.data;
+        console.log(model_id);
+      })
       .catch(error => console.log(uploadFail(error)));
+
+    this.props.onSubmit();
+  }
+
+  handleFileInputChange = (event) => {
+    this.setState({
+      "file": event.nativeEvent.target.files[0],
+      "fileInputSelected": true,
+    })
   }
 
   render() {
     return (
-      <input type="file"
-            name="file"
-            className="upload-form"
-            onChange={this.uploadHandler}
-      />
+      <div id="upload-form">
+        <FormGroup label="Select a csv file" helperText="Select a csv file with training and testing data to train the model on. Data must be in the long format (columns).">
+          <FileInput className={this.state.fileInputSelected && "bp3-file-input-has-selection"} 
+            text={this.state.file.name} 
+            onInputChange={this.handleFileInputChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Button 
+            className="submit-button"
+            text="Submit"
+            onClick={this.submitUploadFormHandler}
+            intent="primary"
+          />
+        </FormGroup>
+      </div>
       )
   }
 }
