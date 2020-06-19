@@ -1,16 +1,9 @@
 import React from 'react';
-import { FormGroup, Text } from "@blueprintjs/core";
+import { FormGroup } from "@blueprintjs/core";
 import axios from 'axios';
 import './blueprint.css'
 import './upload.css'
 import { Button, FileInput } from "@blueprintjs/core";
-
-function uploadSuccess({ data }) {
-  return {
-    type: 'UPLOAD_DOCUMENT_SUCCESS',
-    data,
-  };
-}
 
 function uploadFail(error) {
   return {
@@ -43,12 +36,12 @@ export class UploadForm extends React.Component {
     data.append('headers', {"Access-Control-Allow-Origin": "http://localhost:5000"})
     axios.post('http://localhost:5000/create', data)
       .then(response => {
-        const model_id = response.data;
-        console.log(model_id);
+        const modelId = response.data;
+        this.props.onSubmit(modelId);
+        console.log(modelId);
       })
       .catch(error => console.log(uploadFail(error)));
-
-    this.props.onSubmit();
+    
   }
 
   handleFileInputChange = (event) => {

@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { UploadForm } from './upload.js';
+import { Text } from "@blueprintjs/core";
+
 
 class Title extends React.Component {
   render() {
@@ -26,8 +28,14 @@ class UploadApp extends React.Component {
     };
   }
 
-  handleUploadSubmit = () => {
-    this.setState(prevState => {return {"page": prevState.page+1}})
+  handleUploadSubmit = (modelId) => {
+    this.setState(prevState => {
+      console.log(modelId);
+      return {
+        "page": prevState.page+1, 
+        "modelId": modelId
+      }
+    })
   }
 
   render() {
@@ -47,6 +55,7 @@ class UploadApp extends React.Component {
       return (
         <div className="home-wrapper">
           <Title id="title-div" page={pageName}/>
+          <Text>{this.state.modelId} </Text>
         </div>
       );
     }
