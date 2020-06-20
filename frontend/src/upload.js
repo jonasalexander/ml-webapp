@@ -16,9 +16,15 @@ export class UploadForm extends React.Component {
   constructor(props) {
     super(props);
 
+    this.props = {
+      ...this.props,
+      "defaultFileName": "Choose file...",
+    };
+
     this.state = {
-      "file" : "Choose file...",
-      "fileInputSelected" : false
+      "file" : undefined,
+      "fileName": this.props.defaultFileName,
+      "fileInputSelected" : false,
     };
   }
 
@@ -33,7 +39,6 @@ export class UploadForm extends React.Component {
 
     let data = new FormData();
     data.append('file', file);
-    data.append('name', 'csv');
     data.append('headers', {"Access-Control-Allow-Origin": "http://localhost:5000"})
     axios.post('http://localhost:5000/create', data)
       .then(response => {
@@ -44,10 +49,22 @@ export class UploadForm extends React.Component {
   }
 
   handleFileInputChange = (event) => {
-    this.setState({
-      "file": event.nativeEvent.target.files[0],
-      "fileInputSelected": true,
-    })
+    const file = event.nativeEvent.target.files[0];
+
+    if (file === undefined) {
+      // User clicked Cancel when the upload dialogue came up
+      this.setState({
+        "file": undefined,
+        "fileName": this.props.defaultFileName,
+        "fileInputSelected": false,
+      });
+    } else {
+      this.setState({
+        "file": file,
+        "fileName": file.name,
+        "fileInputSelected": true,
+      });
+    }
   }
 
   render() {
@@ -55,7 +72,7 @@ export class UploadForm extends React.Component {
       <div id="upload-form">
         <FormGroup label="Select a csv file" helperText="Select a csv file with training and testing data to train the model on. Data must be in the long format (columns).">
           <FileInput className={this.state.fileInputSelected && "bp3-file-input-has-selection"} 
-            text={this.state.file.name} 
+            text={this.state.fileName}
             onInputChange={this.handleFileInputChange}
           />
         </FormGroup>
