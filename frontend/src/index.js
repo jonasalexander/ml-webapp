@@ -16,15 +16,21 @@ class App extends React.Component {
     super(props);
     this.state = {
       "page": 0,
-      "modelId": null,
+      "modelId": undefined,
+      "csvPreview": [],
     };
   }
 
-  handleUploadSubmit = (modelId) => {
+  handleUploadSubmit = (uploadData) => {
+    if (uploadData === undefined) {
+      // TODO: Display error message, unable to reach backend
+      return;
+    }
     this.setState(prevState => {
       return {
         "page": prevState.page+1, 
-        "modelId": modelId
+        "modelId": uploadData.model_id,
+        "csvPreview": uploadData.csv_data,
       }
     });
   }
@@ -48,7 +54,10 @@ class App extends React.Component {
         titleText = "Validate Data";
         renderPage = () => {
           return (
-            <ValidateApp modelId={this.state.modelId} />
+            <ValidateApp
+              modelId={this.state.modelId}
+              csvPreview={this.state.csvPreview}
+            />
           );
         };
         break;

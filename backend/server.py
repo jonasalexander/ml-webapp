@@ -3,10 +3,12 @@ import random
 import string
 from pathlib import Path
 import os
+import json
 
 ID_LEN = 30
 DATA_PATH = Path("data/")
 FRONTEND_URL = "http://localhost:3000"
+NUM_PREVIEW_ROWS = 5
 
 app = Flask(__name__)
 
@@ -20,9 +22,14 @@ def create_model():
 
     f = request.files["file"]
     model_data_path = model_id + ".csv"
-    f.save(DATA_PATH / model_data_path)
+    full_path = DATA_PATH / model_data_path
+    f.save(full_path)
 
-    response = Response(model_id, mimetype="text/text")
+    response_data = {"model_id": model_id}
+    with open(full_path, "r") as f:
+        response_data["csv_data"] = [f.readline() for _ in range(NUM_PREVIEW_ROWS)]
+
+    response = Response(json.dumps(response_data), mimetype="application/json")
     response.headers["Access-Control-Allow-Origin"] = FRONTEND_URL
     return response
 

@@ -42,8 +42,7 @@ export class UploadForm extends React.Component {
     data.append('headers', {"Access-Control-Allow-Origin": "http://localhost:5000"})
     axios.post('http://localhost:5000/create', data)
       .then(response => {
-        const modelId = response.data;
-        this.props.onSubmit(modelId);
+        this.props.onSubmit(response.data);
       })
       .catch(error => console.log(uploadFail(error)));
   }
@@ -70,7 +69,9 @@ export class UploadForm extends React.Component {
   render() {
     return (
       <div id="upload-form">
-        <FormGroup label="Select a csv file" helperText="Select a csv file with training and testing data to train the model on. Data must be in the long format (columns).">
+        <FormGroup label="Select a csv file"
+          helperText="Select a csv file with training and testing data to train the model on. Data must be in the long format (columns)."
+          >
           <FileInput className={this.state.fileInputSelected && "bp3-file-input-has-selection"} 
             text={this.state.fileName}
             onInputChange={this.handleFileInputChange}
