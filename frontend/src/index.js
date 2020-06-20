@@ -2,71 +2,87 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { UploadForm } from './upload.js';
-import { Text } from "@blueprintjs/core";
+import { ValidateApp } from './validate.js';
 
-
-class Title extends React.Component {
-  render() {
-    if (this.props.page === "upload") {
-      return (<h1>Create A Model API From a CSV File</h1>)
-    }
-    else {
-      return (<h1>Generic Title</h1>)
-    }
-  }
+const PageNameMap = {
+  0: "upload",
+  1: "validate",
+  2: "train",
+  3: "predict",
 }
 
-class UploadApp extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
-    this.pageNameMap = {
-      0: "upload",
-      1: "validate",
-    }
     this.state = {
-      "page": 0
+      "page": 0,
+      "modelId": null,
     };
   }
 
   handleUploadSubmit = (modelId) => {
     this.setState(prevState => {
-      console.log(modelId);
       return {
         "page": prevState.page+1, 
         "modelId": modelId
       }
-    })
+    });
   }
 
   render() {
-    const pageName = this.pageNameMap[this.state.page];
+    const pageName = PageNameMap[this.state.page];
 
-    if (pageName === "upload") {
-      return (
-        <div className="home-wrapper">
-          <Title id="title-div" page={pageName}/>
-          <div id="upload-wrapper">
-            <UploadForm onSubmit={this.handleUploadSubmit}/>
-          </div>
-        </div>
-      );
-    }
-    else if (pageName === "validate") {
-      return (
-        <div className="home-wrapper">
-          <Title id="title-div" page={pageName}/>
-          <Text>{this.state.modelId} </Text>
-        </div>
-      );
+    let titleText;
+    let renderPage;
+    switch (pageName) {
+      case "upload":
+        titleText = "Create A Model API From a CSV File";
+        renderPage = () => {
+          return (
+              <UploadForm onSubmit={this.handleUploadSubmit}/>
+          )
+        };
+        break;
+
+      case "validate":
+        titleText = "Validate Data";
+        renderPage = () => {
+          return (
+            <ValidateApp modelId={this.state.modelId} />
+          );
+        };
+        break;
+
+      case "train":
+        titleText = "Please Wait, Model is Training";
+        renderPage = () => {};
+        break;
+
+      case "predict":
+        titleText = "Model API";
+        renderPage = () => {};
+        break;
+
+      default:
+        titleText = "Generic Title";
+        renderPage = () => {};
     }
     
+    return (
+      <div className="home-wrapper">
+        <h1 id="title-div">
+          {titleText}
+        </h1>
+        {renderPage()}
+      </div>
+    )
   }
 }
 
 // ========================================
 
 ReactDOM.render(
-  <UploadApp />,
+  <App />,
   document.getElementById('root')
 );
 

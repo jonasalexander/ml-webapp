@@ -25,6 +25,7 @@ export class UploadForm extends React.Component {
   submitUploadFormHandler = (event) => {
 
     if (!this.state.fileInputSelected) {
+      // TODO: display Error asking user to upload file
       return;
     }
 
@@ -38,10 +39,8 @@ export class UploadForm extends React.Component {
       .then(response => {
         const modelId = response.data;
         this.props.onSubmit(modelId);
-        console.log(modelId);
       })
       .catch(error => console.log(uploadFail(error)));
-    
   }
 
   handleFileInputChange = (event) => {
