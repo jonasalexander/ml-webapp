@@ -3,7 +3,7 @@ import { FormGroup } from "@blueprintjs/core";
 import axios from 'axios';
 import './blueprint.css'
 import './upload.css'
-import { Button, FileInput } from "@blueprintjs/core";
+import { Button, Classes, FileInput } from "@blueprintjs/core";
 
 function uploadFail(error) {
   return {
@@ -25,12 +25,16 @@ export class UploadForm extends React.Component {
       "file" : undefined,
       "fileName": this.props.defaultFileName,
       "fileInputSelected" : false,
+      "modelName": undefined,
     };
   }
 
   submitUploadFormHandler = (event) => {
 
-    if (!this.state.fileInputSelected) {
+    if (!this.state.modelName) {
+      this.props.errorCallback("Please specify a name for your model.");
+      return;
+    } else if (!this.state.fileInputSelected) {
       // TODO: display Error asking user to upload file
       this.props.errorCallback("Please upload a file.");
       return;
@@ -73,6 +77,17 @@ export class UploadForm extends React.Component {
   render() {
     return (
       <div id="upload-form">
+        <FormGroup label="Name"
+          helperText="Specify a name for the model you want to create">
+          <input
+            type="text"
+            className={Classes.INPUT}
+            placeholder="My Model"
+            dir="auto"
+            text={this.state.modelName}
+            onChange={(event) => (this.setState({"modelName": event.nativeEvent.data}))} />
+        </FormGroup>
+
         <FormGroup label="Select a csv file"
           helperText="Select a csv file with training and testing data to train the model on. Data must be in the long format (columns)."
           >
