@@ -8,6 +8,11 @@ h1 {
   padding: 1em;
 }
 
+.title-div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .home-wrapper {
   background: #DDD;
 
