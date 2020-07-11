@@ -27,7 +27,7 @@ def create_model():
 
     response_data = {"model_id": model_id}
     with open(full_path, "r") as f:
-        response_data["csv_data"] = [f.readline() for _ in range(NUM_PREVIEW_ROWS)]
+        response_data["csv_data"] = [f.readline().split(",") for _ in range(NUM_PREVIEW_ROWS)]
 
     response = Response(json.dumps(response_data), mimetype="application/json")
     response.headers["Access-Control-Allow-Origin"] = FRONTEND_URL
@@ -38,3 +38,6 @@ def predict(model_id):
     response = Response(model_id, mimetype="text/text")
     response.headers["Access-Control-Allow-Origin"] = FRONTEND_URL
     return response
+
+if __name__ == "__main__":
+    app.run(debug=True)
