@@ -16,14 +16,9 @@ export class UploadForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.props = {
-      ...this.props,
-      "defaultFileName": "Choose file...",
-    };
-
     this.state = {
       "file" : undefined,
-      "fileName": this.props.defaultFileName,
+      "fileName": "Choose file...",
       "fileInputSelected" : false,
       "modelName": undefined,
     };
@@ -44,7 +39,8 @@ export class UploadForm extends React.Component {
 
     let data = new FormData();
     data.append('file', file);
-    data.append('headers', {"Access-Control-Allow-Origin": "http://localhost:5000"})
+    data.append('headers', {"Access-Control-Allow-Origin": "http://localhost:5000"});
+    data.append('modelName', this.state.modelName);
     axios.post('http://localhost:5000/create', data)
       .then(response => {
         this.props.onSubmit(response.data);
@@ -85,7 +81,7 @@ export class UploadForm extends React.Component {
             placeholder="My Model"
             dir="auto"
             text={this.state.modelName}
-            onChange={(event) => (this.setState({"modelName": event.nativeEvent.data}))} />
+            onChange={(event) => (this.setState({"modelName": event.target.value}))} />
         </FormGroup>
 
         <FormGroup label="Select a csv file"
