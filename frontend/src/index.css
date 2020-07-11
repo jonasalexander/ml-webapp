@@ -22,3 +22,25 @@ h1 {
 
   padding: 5%;
 }
+
+.error-message-wrapper {
+  position: absolute;
+  top: 0;
+  transform: translateY(-40px);
+  left: 0;
+  right: 0;
+  margin-top: 10%;
+
+  display: flex;
+}
+
+.error-message {
+  background-color: #ff8989;
+  max-width: 300px;
+  margin: auto;
+
+  padding: 5px 10px;
+  border-radius: 2px;
+
+  text-align: auto;
+}

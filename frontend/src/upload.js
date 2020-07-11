@@ -32,6 +32,7 @@ export class UploadForm extends React.Component {
 
     if (!this.state.fileInputSelected) {
       // TODO: display Error asking user to upload file
+      this.props.errorCallback("Please upload a file.");
       return;
     }
 
@@ -44,7 +45,10 @@ export class UploadForm extends React.Component {
       .then(response => {
         this.props.onSubmit(response.data);
       })
-      .catch(error => console.log(uploadFail(error)));
+      .catch(error => {
+        console.log(uploadFail(error));
+        this.props.errorCallback("Connection Error - Unable to process your request. Please try again later.");
+      });
   }
 
   handleFileInputChange = (event) => {

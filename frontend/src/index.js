@@ -18,12 +18,19 @@ class App extends React.Component {
       "page": 0,
       "modelId": undefined,
       "csvPreview": [],
+      "errorMessage": undefined,
     };
+  }
+
+  setTemporaryError = (errorMessage, time=5) => {
+    this.setState({"errorMessage": errorMessage});
+    setTimeout(() => {this.setState({"errorMessage": undefined});}, time*1000);
   }
 
   handleUploadSubmit = (uploadData) => {
     if (uploadData === undefined) {
       // TODO: Display error message, unable to reach backend
+      this.setTemporaryError("Server Error - Unable to process your request. Please try again later.", 10);
       return;
     }
     this.setState(prevState => {
@@ -45,7 +52,10 @@ class App extends React.Component {
         titleText = "Create A Model API From a CSV File";
         renderPage = () => {
           return (
-              <UploadForm onSubmit={this.handleUploadSubmit}/>
+              <UploadForm
+                onSubmit={this.handleUploadSubmit}
+                errorCallback={this.setTemporaryError}
+              />
           )
         };
         break;
@@ -82,6 +92,11 @@ class App extends React.Component {
         <h1 id="title-div">
           {titleText}
         </h1>
+        <div className="error-message-wrapper">
+          {this.state.errorMessage !== undefined && (
+            <div className="error-message">{this.state.errorMessage}</div>
+          )}
+        </div>
         {renderPage()}
       </div>
     )
