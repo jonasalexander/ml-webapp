@@ -17,6 +17,7 @@ class App extends React.Component {
     this.state = {
       "page": 0,
       "modelId": undefined,
+      "modelName": undefined,
       "csvPreview": [],
       "errorMessage": undefined,
     };
@@ -29,7 +30,6 @@ class App extends React.Component {
 
   handleUploadSubmit = (uploadData) => {
     if (uploadData === undefined) {
-      // TODO: Display error message, unable to reach backend
       this.setTemporaryError("Server Error - Unable to process your request. Please try again later.", 10);
       return;
     }
@@ -37,6 +37,7 @@ class App extends React.Component {
       return {
         "page": prevState.page+1, 
         "modelId": uploadData.model_id,
+        "modelName": uploadData.model_name,
         "csvPreview": uploadData.csv_data,
       }
     });
@@ -61,11 +62,12 @@ class App extends React.Component {
         break;
 
       case "validate":
-        titleText = "Validate Data";
+        titleText = `Validate Data for Model: "${this.state.modelName}"`;
         renderPage = () => {
           return (
             <ValidateApp
               modelId={this.state.modelId}
+              modelName={this.state.modelName}
               csvPreview={this.state.csvPreview}
             />
           );
@@ -89,7 +91,7 @@ class App extends React.Component {
     
     return (
       <div className="home-wrapper">
-        <h1 id="title-div">
+        <h1 className="title-div">
           {titleText}
         </h1>
         <div className="error-message-wrapper">
