@@ -49,7 +49,7 @@ class App extends React.Component {
     let renderPage;
     switch (pageName) {
       case "upload":
-        titleText = "Create A Model API From a CSV File";
+        titleText = "Create a Prediction API from a CSV File";
         renderPage = () => {
           return (
               <UploadForm
